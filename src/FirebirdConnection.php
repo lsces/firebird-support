@@ -53,7 +53,7 @@ class FirebirdConnection extends DatabaseConnection
      */
     protected function getDefaultSchemaGrammar()
     {
-        return $this->withTablePrefix(new FirebirdSchemaGrammar);
+        return new FirebirdSchemaGrammar($this); // $this->withTablePrefix()
     }
 
     /**
