@@ -27,7 +27,7 @@ class FirebirdGrammar extends Grammar
      *
      * @return string
      */
-    public function compileTables()
+    public function compileTables($schema = '')
     {
         return 'select trim(trailing from rdb$relation_name) as "name" '
             .'from rdb$relations '
@@ -41,7 +41,7 @@ class FirebirdGrammar extends Grammar
      *
      * @return string
      */
-    public function compileTableExists()
+    public function compileTableExists($schema = '', $table = '') 
     {
         return 'select rdb$relation_name from rdb$relations where rdb$relation_name = ?';
     }
@@ -49,9 +49,10 @@ class FirebirdGrammar extends Grammar
     /**
      * Compile the query to determine the views.
      *
+     * @param  string|string[]|null  $schema
      * @return string
      */
-    public function compileViews()
+    public function compileViews($schema)
     {
         return 'select trim(trailing from rdb$relation_name) as "name", '
         .'rdb$view_source as "definition" '
@@ -66,7 +67,7 @@ class FirebirdGrammar extends Grammar
      * @param  string  $table
      * @return string
      */
-    public function compileColumns($table)
+    public function compileColumns($schema, $table)
     {
         return 'select trim(trailing from rdb$field_name) as "name" '
             .'from rdb$relation_fields '
@@ -131,7 +132,7 @@ class FirebirdGrammar extends Grammar
 
         return sprintf(
             "execute block as begin if (exists(%s)) then execute statement '%s'; end",
-            str_replace('?', $table, $this->compileTableExists()), // Replace the ? character with the table name.
+            $this->compileTableExists( '', $table),
             $this->compileDrop($blueprint, $command)
         );
     }
