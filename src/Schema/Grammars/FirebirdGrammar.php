@@ -181,7 +181,7 @@ class FirebirdGrammar extends Grammar
         $index = $this->wrap(substr($command->index, 0, 31));
 
         $columns = $this->columnize($command->columns);
-
+// need to skip if the columns are already part of the primary key
         return "ALTER TABLE {$table} ADD CONSTRAINT {$index} UNIQUE ({$columns})";
     }
 
