@@ -43,7 +43,7 @@ class FirebirdGrammar extends Grammar
      */
     public function compileTableExists($schema = '', $table = '') 
     {
-        return 'select rdb$relation_name from rdb$relations where rdb$relation_name = ?';
+        return "select rdb\$relation_name from rdb\$relations where rdb\$relation_name = '$table'";
     }
 
     /**
