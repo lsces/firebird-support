@@ -131,7 +131,7 @@ class FirebirdGrammar extends Grammar
         $table = str_replace('"', "'", $this->wrapTable($blueprint));
 
         return sprintf(
-            "execute block as begin if (exists(%s)) then execute statement '%s'; end",
+            "set term #; execute block as begin if (exists(%s)) then execute statement '%s'; end set term ;#",
             $this->compileTableExists( '', $table),
             $this->compileDrop($blueprint, $command)
         );
