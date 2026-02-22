@@ -492,8 +492,13 @@ class FirebirdGrammar extends Grammar
         $allowed = array_map(function ($a) {
             return "'".$a."'";
         }, $column->allowed);
+		$default = '';
+        if (! is_null($column->default)) {
+            $default .= ' DEFAULT '.$this->getDefaultValue($column->default);
+			$column->default = null;
+        }
 
-        return "VARCHAR(255) CHECK (\"{$column->name}\" IN (".implode(', ', $allowed).'))';
+        return "VARCHAR(255) $default CHECK (\"{$column->name}\" IN (".implode(', ', $allowed).'))';
     }
 
     /**
