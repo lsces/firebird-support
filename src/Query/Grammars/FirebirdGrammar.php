@@ -4,6 +4,7 @@ namespace Xgrz\Firebird\Query\Grammars;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Grammars\Grammar;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class FirebirdGrammar extends Grammar
@@ -111,6 +112,37 @@ class FirebirdGrammar extends Grammar
     {
         return 'RAND()';
     }
+
+	/**
+     * Compile an insert statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @return string
+     */
+    public function compileInsert(Builder $query, array $values)
+    {
+       $table = $this->wrapTable($query->from);
+
+        if (empty($values)) {
+            return "insert into {$table} default values";
+        }
+
+        if (! is_array(array_first($values))) {
+            $values = [$values];
+        }
+
+        $columns = $this->columnize(array_keys(array_first($values)));
+
+        // We need to build a list of parameter place-holders of values that are bound
+        // to the query. Each insert should have the exact same number of parameter
+        // bindings so we will loop through the record and parameterize them all.
+        $parameters = (new Collection($values))
+            ->map(fn ($record) => '('.$this->parameterize($record).')')
+            ->implode(', ');
+
+        return "insert into $table ($columns) values $parameters returning *";
+	}
 
     /**
      * Wrap a union subquery in parentheses.
