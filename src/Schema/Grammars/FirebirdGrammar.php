@@ -5,6 +5,7 @@ namespace Xgrz\Firebird\Schema\Grammars;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Grammars\Grammar;
 use Illuminate\Support\Fluent;
+use Xgrz\Firebird\Query\Builder;
 
 class FirebirdGrammar extends Grammar
 {
@@ -101,7 +102,7 @@ class FirebirdGrammar extends Grammar
 
         $columns = implode(', ', $this->getColumns($blueprint));
 
-        $sql = 'create table '.$this->wrapTable($blueprint)." ($columns)";
+        $sql = 'create table '.$this->wrapTable($blueprint->getTable())." ($columns)";
 
         return $sql;
     }
@@ -115,7 +116,7 @@ class FirebirdGrammar extends Grammar
      */
     public function compileDrop(Blueprint $blueprint, Fluent $command)
     {
-        return 'drop table '.$this->wrapTable($blueprint);
+        return 'drop table '.$this->wrapTable($blueprint->getTable());
     }
 
     /**
@@ -128,7 +129,7 @@ class FirebirdGrammar extends Grammar
     public function compileDropIfExists(Blueprint $blueprint, Fluent $command)
     {
         // Replace the double quotes with single quotes.
-        $table = str_replace('"', "'", $this->wrapTable($blueprint));
+        $table = str_replace('"', "'", $this->wrapTable($blueprint->getTable()));
 
         return sprintf(
             "set term #; execute block as begin if (exists(%s)) then execute statement '%s'; end set term ;#",
@@ -146,7 +147,7 @@ class FirebirdGrammar extends Grammar
      */
     public function compileAdd(Blueprint $blueprint, Fluent $command)
     {
-        $table = $this->wrapTable($blueprint);
+        $table = $this->wrapTable($blueprint->getTable());
 
         $columns = $this->prefixArray('ADD', $this->getColumns($blueprint));
 
@@ -164,7 +165,7 @@ class FirebirdGrammar extends Grammar
     {
         $columns = $this->columnize($command->columns);
 
-        return 'ALTER TABLE '.$this->wrapTable($blueprint)." ADD PRIMARY KEY ({$columns})";
+        return 'ALTER TABLE '.$this->wrapTable($blueprint->getTable())." ADD PRIMARY KEY ({$columns})";
     }
 
     /**
@@ -176,7 +177,7 @@ class FirebirdGrammar extends Grammar
      */
     public function compileUnique(Blueprint $blueprint, Fluent $command)
     {
-        $table = $this->wrapTable($blueprint);
+        $table = $this->wrapTable($blueprint->getTable());
 
         $index = $this->wrap(substr($command->index, 0, 31));
 
@@ -198,7 +199,7 @@ class FirebirdGrammar extends Grammar
 
         $index = $this->wrap(substr($command->index, 0, 31));
 
-        $table = $this->wrapTable($blueprint);
+        $table = $this->wrapTable($blueprint->getTable());
 
         return "CREATE INDEX {$index} ON {$table} ($columns)";
     }
@@ -212,7 +213,7 @@ class FirebirdGrammar extends Grammar
      */
     public function compileForeign(Blueprint $blueprint, Fluent $command)
     {
-        $table = $this->wrapTable($blueprint);
+        $table = $this->wrapTable($blueprint->getTable());
 
         $on = $this->wrapTable($command->on);
 
@@ -252,7 +253,7 @@ class FirebirdGrammar extends Grammar
      */
     public function compileDropForeign(Blueprint $blueprint, Fluent $command)
     {
-        $table = $this->wrapTable($blueprint);
+        $table = $this->wrapTable($blueprint->getTable());
 
         return "ALTER TABLE {$table} DROP CONSTRAINT {$command->index}";
     }
