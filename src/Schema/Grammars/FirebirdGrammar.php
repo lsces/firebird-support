@@ -499,7 +499,7 @@ class FirebirdGrammar extends Grammar
 			$column->default = null;
         }
 
-        return "VARCHAR(255) $default CHECK (\"{$column->name}\" IN (".implode(', ', $allowed).'))';
+        return "VARCHAR(255) $default CHECK ({$column->name} IN (".implode(', ', $allowed).'))';
     }
 
     /**
@@ -650,5 +650,16 @@ class FirebirdGrammar extends Grammar
     protected function typeMacAddress(Fluent $column)
     {
         return 'VARCHAR(17)';
+    }
+
+    /**
+     * Wrap a single string in keyword identifiers.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function wrapValue($value)
+    {
+        return $value;
     }
 }
