@@ -64,7 +64,17 @@ class FirebirdConnection extends DatabaseConnection
         return new FirebirdSchemaGrammar($this); // $this->withTablePrefix()
     }
 
-    /**
+	/**
+     * Get the connection's last insert ID.
+     *
+     * @return string|int|null
+     */
+    public function getLastInsertId()
+    {
+        return $this->lastInsertId;
+    }
+
+	/**
      * Get a new query builder instance.
      *
      * @return \Xgrz\Firebird\Query\Builder
