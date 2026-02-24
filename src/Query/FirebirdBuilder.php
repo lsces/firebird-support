@@ -3,8 +3,9 @@
 namespace Xgrz\Firebird\Query;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Collection;
 
-class Builder extends QueryBuilder
+class FirebirdBuilder extends QueryBuilder
 {
     /**
      * Determine if any rows exist for the current query.
@@ -50,5 +51,59 @@ class Builder extends QueryBuilder
         return $boolean === 'and'
             ? parent::whereRaw("UPPER($wrapped) LIKE UPPER(?)", [$value])
             : parent::orWhereRaw("UPPER($wrapped) LIKE UPPER(?)", [$value]);
+    }
+
+    /**
+     * Retrieve column values from rows represented as objects.
+     *
+     * @param  array  $queryResult
+     * @param  string  $column
+     * @param  string  $key
+     * @return Collection
+     */
+    protected function pluckFromObjectColumn($queryResult, $column, $key)
+    {
+        $results = [];
+		$column = strtoupper($column);
+		$key = strtoupper($key);
+
+		foreach ($queryResult as $item) {
+			if (is_null($key)) {
+				foreach ($queryResult as $row) {
+					$results[] = $row->$column;
+				}
+			} else {
+				foreach ($queryResult as $row) {
+					$results[$row->$key] = $row->$column;
+				}
+			}
+		}
+
+        return new Collection($results);
+    }
+
+    /**
+     * Retrieve column values from rows represented as arrays.
+     *
+     * @param  array  $queryResult
+     * @param  string  $column
+     * @param  string  $key
+     * @return Collection
+     */
+    protected function pluckFromArrayColumn($queryResult, $column, $key)
+    {
+        $results = [];
+
+        if (is_null($key)) {
+            foreach ($queryResult as $row) {
+                $results[] = $row[$column];
+            }
+        } else {
+            foreach ($queryResult as $row) {
+                $results[$row[$key]] = $row[$column];
+            }
+        }
+
+        return new Collection($results);
     }
 }

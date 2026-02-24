@@ -4,10 +4,10 @@ namespace Xgrz\Firebird;
 
 use Illuminate\Database\Connection as DatabaseConnection;
 use Illuminate\Support\Collection;
-use Xgrz\Firebird\Query\Builder as FirebirdQueryBuilder;
+use Xgrz\Firebird\Query\FirebirdBuilder as FirebirdQueryBuilder;
 use Xgrz\Firebird\Query\Grammars\FirebirdGrammar as FirebirdQueryGrammar;
 use Xgrz\Firebird\Query\Processors\FirebirdProcessor as FirebirdQueryProcessor;
-use Xgrz\Firebird\Schema\Builder as FirebirdSchemaBuilder;
+use Xgrz\Firebird\Schema\FirebirdBuilder as FirebirdSchemaBuilder;
 use Xgrz\Firebird\Schema\Grammars\FirebirdGrammar as FirebirdSchemaGrammar;
 
 class FirebirdConnection extends DatabaseConnection
@@ -77,7 +77,7 @@ class FirebirdConnection extends DatabaseConnection
 	/**
      * Get a new query builder instance.
      *
-     * @return \Xgrz\Firebird\Query\Builder
+     * @return \Xgrz\Firebird\Query\FirebirdBuilder
      */
     public function query()
     {
