@@ -145,6 +145,24 @@ class FirebirdGrammar extends Grammar
 	}
 
     /**
+     * Wrap a single string in keyword identifiers.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function wrapValue($value)
+    {
+		// still working on the potential problem of reserved words needing wrapping 
+		// year is certainly one but others depend on version of Firebird
+//        if ($value !== '*') {
+//            return '"'.str_replace('"', '""', $value).'"';
+//        }
+//
+		// Currently just return unwrapped 
+        return $value;
+    }
+
+    /**
      * Wrap a union subquery in parentheses.
      *
      * @param  string  $sql
