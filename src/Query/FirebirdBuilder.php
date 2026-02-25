@@ -64,8 +64,6 @@ class FirebirdBuilder extends QueryBuilder
     protected function pluckFromObjectColumn($queryResult, $column, $key)
     {
         $results = [];
-		$column = strtoupper($column);
-		$key = strtoupper($key);
 
 		foreach ($queryResult as $item) {
 			if (is_null($key)) {
