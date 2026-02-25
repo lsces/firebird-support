@@ -121,6 +121,42 @@ class FirebirdConnection extends DatabaseConnection
            return $result;
         });
     }
+
+    /**
+     * Run a select statement against the database.
+     *
+     * @param  string  $query
+     * @param  array  $bindings
+     * @param  bool  $useReadPdo
+     * @return array
+     */
+    public function select($query, $bindings = [], $useReadPdo = true)
+    {
+        return $this->run($query, $bindings, function ($query, $bindings) use ($useReadPdo) {
+            if ($this->pretending()) {
+                return [];
+            }
+
+            // For select statements, we'll simply execute the query and return an array
+            // of the database result set. Each element in the array will be a single
+            // row from the database table, and will either be an array or objects.
+            $statement = $this->prepared(
+                $this->getPdoForSelect($useReadPdo)->prepare($query)
+            );
+
+            $this->bindValues($statement, $this->prepareBindings($bindings));
+
+            $statement->execute();
+
+			$result = [];
+			while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
+			    $lowerCaseRow = array_change_key_case((array) $row, CASE_LOWER);
+			    $result[] = (object) $lowerCaseRow;
+			}
+            return count($result) > 0 ? $result : [];
+        });
+    }
+
     /**
      * Execute a stored procedure.
      *
