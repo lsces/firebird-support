@@ -92,7 +92,7 @@ class FirebirdConnection extends DatabaseConnection
      * @param  string  $query
      * @param  array  $bindings
      * @param  string|null  $sequence
-     * @return bool
+     * @return array
      */
     public function insert($query, $bindings = [], $sequence = null)
     {
