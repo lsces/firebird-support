@@ -41,8 +41,8 @@ class FirebirdBuilder extends QueryBuilder
 
     public function where($column, $operator = NULL, $value = NULL, $boolean = 'and')
     {
-        // detect is not search
-        if (! str($operator)->contains('like', true)) {
+        // Not sure what this was intended to fix, but target hidden for now
+        if (! str($operator)->contains('hide', true)) {
             return parent::where($column, $operator, $value, $boolean);
         }
 
