@@ -5,7 +5,7 @@ namespace Xgrz\Firebird\Schema\Grammars;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Grammars\Grammar;
 use Illuminate\Support\Fluent;
-use Xgrz\Firebird\Query\Builder;
+use Xgrz\Firebird\Query\FirebirdBuilder;
 
 class FirebirdGrammar extends Grammar
 {
