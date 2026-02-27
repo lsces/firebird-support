@@ -152,12 +152,11 @@ class FirebirdGrammar extends Grammar
      */
     protected function wrapValue($value)
     {
-		// still working on the potential problem of reserved words needing wrapping 
-		// year is certainly one but others depend on version of Firebird
-//        if ($value !== '*') {
-//            return '"'.str_replace('"', '""', $value).'"';
-//        }
-//
+		// wrap reserved words in firebird
+		if ($value == 'year' or $value == 'pending' or $value == 'value') {
+            return '"'.$value.'"';
+        }
+
 		// Currently just return unwrapped 
         return $value;
     }
