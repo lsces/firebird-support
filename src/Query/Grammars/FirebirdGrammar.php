@@ -79,6 +79,38 @@ class FirebirdGrammar extends Grammar
     }
 
     /**
+     * Compile a delete statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return string
+     */
+    public function compileDelete(Builder $query)
+    {
+        if (isset($query->joins) || isset($query->limit)) {
+            return $this->compileDeleteWithJoinsOrLimit($query);
+        }
+
+        return parent::compileDelete($query);
+    }
+
+    /**
+     * Compile a delete statement with joins or limit into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return string
+     */
+    protected function compileDeleteWithJoinsOrLimit(Builder $query)
+    {
+        $table = $this->wrapTable($query->from);
+
+        $alias = last(preg_split('/\s+as\s+/i', $query->from));
+
+        $selectSql = $this->compileSelect($query->select($alias.'.p_id'));
+
+        return "delete from {$table} where {$this->wrap('p_id')} in ({$selectSql})";
+    }
+
+    /**
      * Compile the "limit" portions of the query.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
