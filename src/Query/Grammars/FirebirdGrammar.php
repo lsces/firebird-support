@@ -86,7 +86,7 @@ class FirebirdGrammar extends Grammar
      */
     public function compileDelete(Builder $query)
     {
-        if (isset($query->joins) || isset($query->limit)) {
+        if (isset($query->joins) ) { // || isset($query->limit)) {
             return $this->compileDeleteWithJoinsOrLimit($query);
         }
 
@@ -102,12 +102,15 @@ class FirebirdGrammar extends Grammar
     protected function compileDeleteWithJoinsOrLimit(Builder $query)
     {
         $table = $this->wrapTable($query->from);
-
         $alias = last(preg_split('/\s+as\s+/i', $query->from));
+		switch ($alias) { 
+			case 'block_setting' : $field = 'block_id'; break;
+			case 'places' : $field = 'p_id'; break;
+			default : $field = $alias.'_id';
+		}
+		$selectSql = $this->compileSelect($query->select($alias.'.'.$field));
 
-        $selectSql = $this->compileSelect($query->select($alias.'.p_id'));
-
-        return "delete from {$table} where {$this->wrap('p_id')} in ({$selectSql})";
+        return "delete from {$table} where {$this->wrap($field)} in ({$selectSql})";
     }
 
     /**
