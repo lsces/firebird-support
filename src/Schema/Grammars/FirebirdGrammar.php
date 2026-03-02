@@ -72,7 +72,7 @@ class FirebirdGrammar extends Grammar
     {
         return 'select trim(trailing from rdb$field_name) as "name" '
             .'from rdb$relation_fields '
-            .'where rdb$relation_name = '.$this->quoteString($table).' '
+            .'where rdb$relation_name = '.$this->quoteString(strtoupper($table) ).' '
             .'order by rdb$relation_name';
     }
 
