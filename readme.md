@@ -23,9 +23,20 @@ but at the present time I am fighting to get lsces/firebird-support to actually 
 _The package will automatically register itself._
 Is not something I have actually seen happening, and it seems that this may be down to the fact that
 webtrees is ONLY using illuminate/database and no the laravel wrapper. 
+The quick hack to load the driver is to replace ConnectionFactory.php in vendor/illuminate/database/Connectors with the copy in the extra folder here.
+This adds
+```
+use Xgrz\Firebird\FirebirdConnection;
+use Xgrz\Firebird\FirebirdConnector;
+```
+to the use list and then adds
+`'firebird' => new FirebirdConnector,`
+to createConnector list and
+`'firebird' => new FirebirdConnection($connection, $database, $prefix, $config),`
+to createConnection
 
-Declare the connection within your `config/database.php` file by using `firebird` as the
-driver:
+Declare the connection as you would normally by using `firebird` as the
+driver: 
 ```php
 'connections' => [
 
@@ -42,6 +53,8 @@ driver:
 
 ],
 ```
+The location of these settings varies based on the higher level application.
+
 ## TODO
 I am thinking this is worth moving to FirebirdSQL repo to live with the other firebird extra drivers. 
 There are still a few holes that need to be plugged, but so far I have a working webtrees site to replace the phpgedview one and I now I'm ready to hit some of the finer detail.
