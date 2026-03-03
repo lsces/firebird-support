@@ -6,9 +6,9 @@ Thank you, Harry, for your work!
 
 ## Version Support
 
-- **PHP:** 8.2, 8.3
+- **PHP:** 8.4
 - **Laravel:** 12.x
-- **Firebird:** 2.5, 3.0, 4.0
+- **Firebird:** 2.5, 3.0, 4.0, 5.0
 
 ## Installation
 
