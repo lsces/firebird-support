@@ -83,7 +83,7 @@ class FirebirdBuilder extends QueryBuilder
     protected function pluckFromObjectColumn($queryResult, $column, $key)
     {
         $results = [];
-
+		$column = str_replace('"', '', $column);
 		foreach ($queryResult as $item) {
 			if (is_null($key)) {
 				foreach ($queryResult as $row) {
