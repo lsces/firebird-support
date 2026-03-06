@@ -21,7 +21,7 @@ composer require lsces/illuminate-firebird
 but at some point I would like to see it migrate under the FirebirdSQL umberella.
 
 _The package will automatically register itself._
-And that is the basis on which this switch of name is being undertaken! 
+And that is the basis on which this switch of name is being undertaken! Initial problems with loading the driver into illuminate have now been sorted and https://github.com/lsces/webtrees/blob/main/app/DB.php#L126 shows how to use illuminate's resolverFor function to to add it directly rather than relying on the automatic registration that FirebirdServiceProvider should action if the application is using the whole laravel frameowrk.
 
 Declare the connection as you would normally by using `firebird` as the
 driver: 
@@ -43,7 +43,7 @@ driver:
 ```
 The location of these settings varies based on the higher level application.
 
-The current testing has been carried out in [webtrees](https://dev.webtrees.net/) which is not using Laravel, and only the illuminate/database package (having upgraded from ADOdb previously).
+The current testing has been carried out in [webtrees](https://dev.webtrees.net/) which is not using Laravel, and only the illuminate/database package (having upgraded from ADOdb previously). 
 
 ## TODO
 I am thinking this is worth moving to FirebirdSQL repo to live with the other firebird extra drivers. 
