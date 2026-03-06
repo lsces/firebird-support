@@ -1,6 +1,6 @@
 <?php
 
-namespace Firebird\Illuminate;
+namespace Firebird\Illuminate\Schema;
 
 use Illuminate\Database\Schema\Builder as SchemaBuilder;
 
